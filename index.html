@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Free online bill splitter and tip calculator. Easily split restaurant checks, calculate tax and tip, and divide shared items among groups.">
+<title>Bill Splitter & Tip Calculator</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --bg-secondary: #f6f6f4;
+    --bg-tertiary: #ededea;
+    --text-primary: #1a1a18;
+    --text-secondary: #6b6b67;
+    --text-tertiary: #9f9f9b;
+    --border: rgba(0,0,0,0.12);
+    --border-hover: rgba(0,0,0,0.22);
+    --accent: #185FA5;
+    --accent-bg: #E6F1FB;
+    --accent-text: #0C447C;
+    --danger: #A32D2D;
+    --danger-bg: #FCEBEB;
+    --success: #3B6D11;
+    --success-bg: #EAF3DE;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1a;
+      --bg-secondary: #242422;
+      --bg-tertiary: #2e2e2b;
+      --text-primary: #f0f0ec;
+      --text-secondary: #9f9f9b;
+      --text-tertiary: #6b6b67;
+      --border: rgba(255,255,255,0.1);
+      --border-hover: rgba(255,255,255,0.2);
+      --accent: #378ADD;
+      --accent-bg: #042C53;
+      --accent-text: #85B7EB;
+      --danger: #E24B4A;
+      --danger-bg: #501313;
+      --success: #97C459;
+      --success-bg: #173404;
+    }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .app {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 2rem 1rem 1rem;
+  }
+
+  .app-header { margin-bottom: 1.75rem; }
+  .app-header h1 { font-size: 22px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; display: flex; align-items: center; gap: 8px; }
+  .app-header h1 i { color: var(--accent); font-size: 22px; }
+  .app-header p { font-size: 14px; color: var(--text-secondary); }
+
+  .mode-toggle {
+    display: flex;
+    background: var(--bg-secondary);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 4px;
+    margin-bottom: 1.5rem;
+    gap: 4px;
+  }
+  .mode-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+  }
+  .mode-btn.active {
+    background: var(--bg);
+    color: var(--text-primary);
+    box-shadow: var(--shadow);
+  }
+  .mode-btn i { font-size: 16px; }
+
+  .card {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow);
+  }
+  .card-header {
+    padding: 12px 14px;
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg-secondary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-header-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    flex: 1;
+  }
+
+  .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1rem; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label { font-size: 12px; font-weight: 600; color: var(--text-secondary); letter-spacing: 0.04em; text-transform: uppercase; }
+  .input-wrap { position: relative; }
+  .input-wrap .sym { position: absolute; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--text-tertiary); pointer-events: none; }
+  .input-wrap .sym-left { left: 10px; }
+  .input-wrap .sym-right { right: 10px; }
+  .input-wrap input { width: 100%; }
+  .input-sym-right { padding-right: 28px !important; }
+  .input-sym-left { padding-left: 26px !important; }
+
+  input[type="number"], input[type="text"] {
+    width: 100%;
+    padding: 9px 12px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    color: var(--text-primary);
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  input:hover { border-color: var(--border-hover); }
+  input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(24,95,165,0.12); }
+  input::placeholder { color: var(--text-tertiary); }
+
+  .avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .person-name-input {
+    flex: 1;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 0 !important;
+  }
+  .person-name-input:focus { border: none !important; box-shadow: none !important; }
+
+  .items-body { padding: 10px 14px; }
+  .item-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .item-name { flex: 2; min-width: 0; }
+  .price-wrap { flex: 1; min-width: 80px; position: relative; }
+  .price-wrap .sym { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 13px; color: var(--text-tertiary); pointer-events: none; }
+  .price-wrap input { padding-left: 22px !important; }
+
+  .icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 6px;
+    color: var(--text-tertiary);
+    display: flex; align-items: center;
+    font-size: 16px;
+    transition: all 0.12s;
+    flex-shrink: 0;
+  }
+  .icon-btn:hover { color: var(--danger); background: var(--danger-bg); }
+
+  .add-row-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 7px 14px 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-secondary);
+    width: 100%;
+  }
+  .add-row-btn:hover { color: var(--accent); }
+  .add-row-btn i { font-size: 15px; }
+
+  .add-person-btn {
+    width: 100%;
+    padding: 11px;
+    border: 0.5px dashed var(--border-hover);
+    border-radius: var(--radius-lg);
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-secondary);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin-bottom: 1rem;
+    transition: all 0.15s;
+  }
+  .add-person-btn:hover { background: var(--bg); color: var(--text-primary); border-color: var(--accent); }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin: 1.25rem 0 0.6rem;
+  }
+
+  .summary-card { margin-top: 1.5rem; }
+  .summary-row {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 13px 16px;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .summary-row:last-of-type { border-bottom: none; }
+  .summary-info { flex: 1; min-width: 0; }
+  .summary-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; color: var(--text-primary); }
+  .summary-pills { display: flex; flex-wrap: wrap; gap: 4px; }
+  .pill {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 100px;
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    border: 0.5px solid var(--border);
+  }
+  .summary-amount { font-size: 18px; font-weight: 700; color: var(--text-primary); white-space: nowrap; }
+  .grand-total {
+    background: var(--accent-bg);
+    padding: 14px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-top: 0.5px solid var(--border);
+  }
+  .grand-label { font-size: 13px; font-weight: 600; color: var(--accent-text); }
+  .grand-amount { font-size: 20px; font-weight: 700; color: var(--accent-text); }
+
+  .empty-state {
+    padding: 2rem 1rem;
+    text-align: center;
+    color: var(--text-tertiary);
+    font-size: 14px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .empty-state i { font-size: 28px; }
+
+  .solo-total-display {
+    padding: 1.5rem;
+    text-align: center;
+    border-top: 0.5px solid var(--border);
+  }
+  .solo-total-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .solo-total-amount { font-size: 36px; font-weight: 700; color: var(--text-primary); }
+  .solo-breakdown {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+  .solo-breakdown-item {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    padding: 10px 8px;
+    text-align: center;
+  }
+  .solo-breakdown-item .val { font-size: 16px; font-weight: 600; color: var(--text-primary); }
+  .solo-breakdown-item .lbl { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+  .av-blue { background: #E6F1FB; color: #0C447C; }
+  .av-teal { background: #E1F5EE; color: #0F6E56; }
+  .av-coral { background: #FAECE7; color: #993C1D; }
+  .av-pink { background: #FBEAF0; color: #993556; }
+  .av-purple { background: #EEEDFE; color: #3C3489; }
+  .av-amber { background: #FAEEDA; color: #854F0B; }
+
+  .seo-content {
+    max-width: 640px;
+    margin: 1rem auto 4rem;
+    padding: 2rem;
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+  }
+  .seo-content h2 { font-size: 20px; color: var(--text-primary); margin: 0 0 1rem; }
+  .seo-content h3 { font-size: 16px; color: var(--text-primary); margin: 1.5rem 0 0.5rem; }
+  .seo-content p { margin-bottom: 1rem; color: var(--text-secondary); line-height: 1.6; }
+  .seo-content ul { margin-bottom: 1rem; padding-left: 1.5rem; color: var(--text-secondary); }
+  .seo-content li { margin-bottom: 0.5rem; }
+  
+  .site-footer {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 0.5px solid var(--border);
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-tertiary);
+  }
+  .site-footer a { color: var(--accent); text-decoration: none; margin: 0 8px; }
+  .site-footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 480px) {
+    .settings-grid { grid-template-columns: 1fr; }
+    .solo-breakdown { grid-template-columns: 1fr 1fr 1fr; }
+    .seo-content { padding: 1.5rem 1rem; margin: 0 1rem 3rem; }
+  }
+</style>
+</head>
+<body>
+<main class="app">
+  <header class="app-header">
+    <h1><i class="ti ti-receipt-2"></i> Bill Splitter</h1>
+    <p>Menu price → actual amount to pay, with tax & tip</p>
+  </header>
+
+  <nav class="mode-toggle">
+    <button class="mode-btn active" id="btnSolo" onclick="setMode('solo')">
+      <i class="ti ti-user"></i> Just me
+    </button>
+    <button class="mode-btn" id="btnGroup" onclick="setMode('group')">
+      <i class="ti ti-users"></i> Split with group
+    </button>
+  </nav>
+
+  <section class="card">
+    <div class="card-header">
+      <i class="ti ti-adjustments-horizontal" style="color:var(--text-secondary);font-size:16px"></i>
+      <span class="card-header-title">Tax & tip</span>
+    </div>
+    <div style="padding:14px">
+      <div class="settings-grid">
+        <div class="field">
+          <label for="taxRate">Sales tax</label>
+          <div class="input-wrap">
+            <span class="sym sym-right">%</span>
+            <input type="number" id="taxRate" class="input-sym-right" value="8.875" min="0" max="25" step="0.1" oninput="recalc()">
+          </div>
+        </div>
+        <div class="field">
+          <label for="tipPct">Tip</label>
+          <div class="input-wrap">
+            <span class="sym sym-right">%</span>
+            <input type="number" id="tipPct" class="input-sym-right" value="20" min="0" max="50" step="1" oninput="recalc()">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="soloMode">
+    <div class="section-label">Your items</div>
+    <div class="card">
+      <div class="items-body" id="soloItems"></div>
+      <button class="add-row-btn" onclick="addSoloItem()">
+        <i class="ti ti-plus"></i> Add item
+      </button>
+    </div>
+
+    <div class="card summary-card" id="soloSummary" style="display:none">
+      <div class="solo-total-display">
+        <div class="solo-total-label">You owe</div>
+        <div class="solo-total-amount" id="soloTotal">$0.00</div>
+        <div class="solo-breakdown">
+          <div class="solo-breakdown-item">
+            <div class="val" id="soloMenu">$0.00</div>
+            <div class="lbl">Menu total</div>
+          </div>
+          <div class="solo-breakdown-item">
+            <div class="val" id="soloTax">$0.00</div>
+            <div class="lbl">Tax</div>
+          </div>
+          <div class="solo-breakdown-item">
+            <div class="val" id="soloTip">$0.00</div>
+            <div class="lbl">Tip</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="groupMode" style="display:none">
+    <div class="section-label">People & their orders</div>
+    <div id="personsList"></div>
+    <button class="add-person-btn" onclick="addPerson()">
+      <i class="ti ti-user-plus"></i> Add person
+    </button>
+
+    <div class="section-label">Shared items — split equally</div>
+    <div class="card">
+      <div class="card-header">
+        <i class="ti ti-users" style="color:var(--text-secondary);font-size:16px"></i>
+        <span class="card-header-title">Shared appetizers, drinks, desserts…</span>
+      </div>
+      <div class="items-body" id="sharedItems"></div>
+      <button class="add-row-btn" onclick="addSharedItem()">
+        <i class="ti ti-plus"></i> Add shared item
+      </button>
+    </div>
+
+    <div class="card summary-card">
+      <div class="card-header">
+        <i class="ti ti-calculator" style="color:var(--text-secondary);font-size:16px"></i>
+        <span class="card-header-title">Venmo breakdown</span>
+      </div>
+      <div id="summaryRows">
+        <div class="empty-state">
+          <i class="ti ti-user-plus"></i>
+          Add people and items above to see the split
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<article class="seo-content">
+  <h2>The Ultimate Bill Splitter and Tip Calculator</h2>
+  <p>Figuring out exactly how much everyone owes at the end of a group dinner can quickly turn an enjoyable evening into a stressful math problem. Our free bill splitter and tip calculator is designed to eliminate the hassle. Whether you are grabbing a quick lunch by yourself or splitting a massive feast with a large group of friends, this tool calculates exactly what everyone owes down to the penny.</p>
+
+  <h3>Why Use a Check Splitter?</h3>
+  <p>When dining with friends or coworkers, the traditional "divide by the number of people" method rarely works fairly. Someone might have ordered a side salad and water, while someone else had an expensive steak and a few rounds of cocktails. By using our bill splitting tool, you guarantee fairness. It accurately applies the correct proportion of the sales tax and the tip percentage to each individual's customized subtotal.</p>
+  
+  <h3>How to Split a Restaurant Bill Fairly</h3>
+  <ul>
+    <li><strong>For Solo Diners:</strong> Stay in the "Just me" mode. Input the price of your meal, adjust the local sales tax percentage, and choose your tip amount to see exactly what will be charged to your card.</li>
+    <li><strong>For Groups:</strong> Switch to the "Split with group" mode. Add every person sitting at the table. Under their name, list out exactly what they ordered.</li>
+    <li><strong>Handling Shared Items:</strong> If the table shared appetizers, desserts, or pitchers of drinks, simply add them to the "Shared items" section. The cost of these shared goods is automatically divided evenly among everyone in the group.</li>
+  </ul>
+
+  <h3>Frequently Asked Questions</h3>
+  <p><strong>How does the tip calculator work?</strong><br>
+  Standard tipping etiquette is typically between 15% and 20%. You can manually input any tip percentage, and our calculator will figure out the dollar amount based on the subtotal. It distributes the tip proportionally among your group members so the person who spent the most pays their fair share of the tip.</p>
+  
+  <p><strong>Does this handle unlimited people?</strong><br>
+  Yes, there is no hard limit. You can add as many individuals and custom items as necessary to match your receipt line-by-line.</p>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 Bill Splitter Calculator. All rights reserved.</p>
+    <div style="margin-top: 10px;">
+      <a href="index.html">Home</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+      <a href="contact.html">Contact Us</a>
+    </div>
+  </footer>
+</article>
+
+<script>
+let mode = 'solo';
+let soloItems = [];
+let persons = [];
+let sharedItems = [];
+let pCounter = 0;
+const avColors = ['av-blue','av-teal','av-coral','av-pink','av-purple','av-amber'];
+
+function setMode(m) {
+  mode = m;
+  document.getElementById('soloMode').style.display = m === 'solo' ? '' : 'none';
+  document.getElementById('groupMode').style.display = m === 'group' ? '' : 'none';
+  document.getElementById('btnSolo').classList.toggle('active', m === 'solo');
+  document.getElementById('btnGroup').classList.toggle('active', m === 'group');
+  recalc();
+}
+
+function addSoloItem() {
+  soloItems.push({ name: '', price: '' });
+  renderSoloItems();
+}
+
+function removeSoloItem(i) {
+  soloItems.splice(i, 1);
+  renderSoloItems();
+  recalc();
+}
+
+function renderSoloItems() {
+  const el = document.getElementById('soloItems');
+  if (soloItems.length === 0) {
+    el.innerHTML = '<div class="empty-state" style="padding:1rem"><i class="ti ti-shopping-cart"></i><span>No items yet — add something below</span></div>';
+    return;
+  }
+  el.innerHTML = soloItems.map((item, i) => `
+    <div class="item-row">
+      <input class="item-name" type="text" value="${item.name}" placeholder="What did you order?" oninput="soloItems[${i}].name=this.value;recalc()">
+      <div class="price-wrap">
+        <span class="sym">$</span>
+        <input type="number" value="${item.price}" placeholder="0.00" min="0" step="0.01" oninput="soloItems[${i}].price=this.value;recalc()">
+      </div>
+      <button class="icon-btn" onclick="removeSoloItem(${i})" title="Remove"><i class="ti ti-trash"></i></button>
+    </div>`).join('');
+}
+
+function initials(name) {
+  return (name || '?').split(' ').filter(Boolean).map(w => w[0]).join('').toUpperCase().slice(0,2) || '?';
+}
+
+function addPerson(name) {
+  const id = ++pCounter;
+  persons.push({ id, name: name || `Person ${id}`, items: [] });
+  renderPersons();
+  recalc();
+}
+
+function removePerson(id) {
+  persons = persons.filter(p => p.id !== id);
+  renderPersons();
+  recalc();
+}
+
+function addItem(personId) {
+  const p = persons.find(x => x.id === personId);
+  if (p) { p.items.push({ name: '', price: '' }); renderPersons(); }
+}
+
+function removeItem(personId, i) {
+  const p = persons.find(x => x.id === personId);
+  if (p) { p.items.splice(i, 1); renderPersons(); recalc(); }
+}
+
+function addSharedItem() {
+  sharedItems.push({ name: '', price: '' });
+  renderShared();
+}
+
+function removeSharedItem(i) {
+  sharedItems.splice(i, 1);
+  renderShared();
+  recalc();
+}
+
+function renderPersons() {
+  const el = document.getElementById('personsList');
+  el.innerHTML = persons.map((p, pi) => {
+    const av = avColors[pi % avColors.length];
+    return `
+    <div class="card" style="margin-bottom:10px">
+      <div class="card-header">
+        <div class="avatar ${av}" id="av-${p.id}">${initials(p.name)}</div>
+        <input class="person-name-input" type="text" value="${p.name}"
+          oninput="updatePName(${p.id},this.value)" placeholder="Name">
+        <button class="icon-btn" onclick="removePerson(${p.id})" title="Remove person"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="items-body">
+        ${p.items.length === 0
+          ? `<div style="padding:4px 0 6px;font-size:13px;color:var(--text-tertiary)">No items yet</div>`
+          : p.items.map((item, i) => `
+          <div class="item-row">
+            <input class="item-name" type="text" value="${item.name}" placeholder="Item name"
+              oninput="updatePItem(${p.id},${i},'name',this.value)">
+            <div class="price-wrap">
+              <span class="sym">$</span>
+              <input type="number" value="${item.price}" placeholder="0.00" min="0" step="0.01"
+                oninput="updatePItem(${p.id},${i},'price',this.value)">
+            </div>
+            <button class="icon-btn" onclick="removeItem(${p.id},${i})" title="Remove item"><i class="ti ti-trash"></i></button>
+          </div>`).join('')}
+      </div>
+      <button class="add-row-btn" onclick="addItem(${p.id})">
+        <i class="ti ti-plus"></i> Add item for ${p.name || 'this person'}
+      </button>
+    </div>`;
+  }).join('');
+}
+
+function renderShared() {
+  const el = document.getElementById('sharedItems');
+  if (sharedItems.length === 0) {
+    el.innerHTML = `<div style="padding:10px 0 4px;font-size:13px;color:var(--text-tertiary)">No shared items</div>`;
+    return;
+  }
+  el.innerHTML = sharedItems.map((item, i) => `
+    <div class="item-row">
+      <input class="item-name" type="text" value="${item.name}" placeholder="Shared item"
+        oninput="sharedItems[${i}].name=this.value;recalc()">
+      <div class="price-wrap">
+        <span class="sym">$</span>
+        <input type="number" value="${item.price}" placeholder="0.00" min="0" step="0.01"
+          oninput="sharedItems[${i}].price=this.value;recalc()">
+      </div>
+      <button class="icon-btn" onclick="removeSharedItem(${i})" title="Remove"><i class="ti ti-trash"></i></button>
+    </div>`).join('');
+}
+
+function updatePName(id, val) {
+  const p = persons.find(x => x.id === id);
+  if (p) {
+    p.name = val;
+    const av = document.getElementById(`av-${id}`);
+    if (av) av.textContent = initials(val);
+    recalc();
+  }
+}
+
+function updatePItem(personId, i, field, val) {
+  const p = persons.find(x => x.id === personId);
+  if (p && p.items[i]) { p.items[i][field] = val; recalc(); }
+}
+
+function recalc() {
+  const taxRate = parseFloat(document.getElementById('taxRate').value) / 100 || 0;
+  const tipRate = parseFloat(document.getElementById('tipPct').value) / 100 || 0;
+
+  if (mode === 'solo') {
+    const menu = soloItems.reduce((s, i) => s + (parseFloat(i.price) || 0), 0);
+    const tax = menu * taxRate;
+    const tip = menu * tipRate;
+    const total = menu + tax + tip;
+    const summaryEl = document.getElementById('soloSummary');
+    if (menu > 0) {
+      summaryEl.style.display = '';
+      document.getElementById('soloTotal').textContent = '$' + total.toFixed(2);
+      document.getElementById('soloMenu').textContent = '$' + menu.toFixed(2);
+      document.getElementById('soloTax').textContent = '$' + tax.toFixed(2);
+      document.getElementById('soloTip').textContent = '$' + tip.toFixed(2);
+    } else {
+      summaryEl.style.display = 'none';
+    }
+    return;
+  }
+
+  const n = persons.length;
+  const sharedTotal = sharedItems.reduce((s, i) => s + (parseFloat(i.price) || 0), 0);
+  const sharedPP = n > 0 ? sharedTotal / n : 0;
+
+  const results = persons.map((p, pi) => {
+    const menu = p.items.reduce((s, i) => s + (parseFloat(i.price) || 0), 0);
+    const sub = menu + sharedPP;
+    const tax = sub * taxRate;
+    const tip = sub * tipRate;
+    const total = sub + tax + tip;
+    return { p, pi, menu, sharedPP, sub, tax, tip, total };
+  });
+
+  const grandTotal = results.reduce((s, r) => s + r.total, 0);
+  const summaryEl = document.getElementById('summaryRows');
+
+  if (results.length === 0) {
+    summaryEl.innerHTML = `<div class="empty-state"><i class="ti ti-user-plus"></i>Add people and items above to see the split</div>`;
+    return;
+  }
+
+  summaryEl.innerHTML = results.map(r => {
+    const av = avColors[r.pi % avColors.length];
+    const name = r.p.name || `Person ${r.p.id}`;
+    const pills = [
+      r.menu > 0 ? `<span class="pill">Menu $${r.menu.toFixed(2)}</span>` : '',
+      r.sharedPP > 0 ? `<span class="pill">Shared $${r.sharedPP.toFixed(2)}</span>` : '',
+      r.tax > 0 ? `<span class="pill">Tax $${r.tax.toFixed(2)}</span>` : '',
+      r.tip > 0 ? `<span class="pill">Tip $${r.tip.toFixed(2)}</span>` : '',
+    ].filter(Boolean).join('');
+    return `
+    <div class="summary-row">
+      <div class="avatar ${av}">${initials(name)}</div>
+      <div class="summary-info">
+        <div class="summary-name">${name}</div>
+        <div class="summary-pills">${pills || '<span class="pill">No items</span>'}</div>
+      </div>
+      <div class="summary-amount">$${r.total.toFixed(2)}</div>
+    </div>`;
+  }).join('') + `
+  <div class="grand-total">
+    <span class="grand-label">Grand total (tax + tip incl.)</span>
+    <span class="grand-amount">$${grandTotal.toFixed(2)}</span>
+  </div>`;
+}
+
+soloItems.push({ name: 'Caesar salad', price: '15' });
+renderSoloItems();
+recalc();
+
+addPerson('Alex');
+persons[0].items.push({ name: 'Caesar salad', price: '15' });
+addPerson('Jordan');
+persons[1].items.push({ name: 'Ribeye steak', price: '45' });
+persons[1].items.push({ name: 'Wine', price: '12' });
+sharedItems.push({ name: 'Bruschetta', price: '14' });
+renderPersons();
+renderShared();
+</script>
+  
+</body>
+</html>
