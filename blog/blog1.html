@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Split a Restaurant Bill Fairly (Without the Awkward Math) – billsplitte.com</title>
+  <meta name="description" content="Splitting the bill at a restaurant doesn't have to be awkward or unfair. Here's how to divide a check the right way, with tax and tip included.">
+  <meta name="keywords" content="how to split restaurant bill, split bill fairly, bill splitter, divide check at restaurant, split bill with friends">
+  <meta property="og:title" content="How to Split a Restaurant Bill Fairly">
+  <meta property="og:description" content="Splitting the bill at a restaurant doesn't have to be awkward. Here's how to do it fairly every time.">
+  <meta property="og:url" content="https://billsplitte.com/blog/how-to-split-restaurant-bill.html">
+  <link rel="canonical" href="https://billsplitte.com/blog/how-to-split-restaurant-bill.html">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: #f6f6f4;
+      color: #1a1a18;
+      font-size: 16px;
+      line-height: 1.75;
+    }
+    .page { max-width: 680px; margin: 0 auto; padding: 2rem 1.25rem 5rem; }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 13px; color: #185FA5; text-decoration: none;
+      margin-bottom: 2rem; font-weight: 500;
+    }
+    .back-link:hover { text-decoration: underline; }
+
+    .post-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: #185FA5;
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-size: 28px; font-weight: 700; line-height: 1.3;
+      color: #1a1a18; margin-bottom: 12px;
+    }
+    .meta {
+      font-size: 13px; color: #9f9f9b;
+      margin-bottom: 2rem;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .meta span { display: flex; align-items: center; gap: 4px; }
+
+    .intro {
+      font-size: 17px; color: #3a3a38; line-height: 1.8;
+      border-left: 3px solid #185FA5;
+      padding-left: 16px;
+      margin-bottom: 2rem;
+    }
+
+    h2 {
+      font-size: 20px; font-weight: 700;
+      color: #1a1a18; margin: 2.5rem 0 0.75rem;
+    }
+    h3 { font-size: 17px; font-weight: 600; color: #1a1a18; margin: 1.5rem 0 0.5rem; }
+
+    p { font-size: 15.5px; color: #3a3a38; margin-bottom: 1.1rem; }
+
+    ul, ol { padding-left: 1.4rem; margin-bottom: 1.2rem; }
+    li { font-size: 15.5px; color: #3a3a38; margin-bottom: 0.5rem; line-height: 1.7; }
+
+    .highlight-box {
+      background: #fff;
+      border: 0.5px solid rgba(0,0,0,0.1);
+      border-radius: 12px;
+      padding: 20px 22px;
+      margin: 1.75rem 0;
+    }
+    .highlight-box p { margin-bottom: 0; }
+    .highlight-box p:not(:last-child) { margin-bottom: 0.75rem; }
+
+    .scenario-box {
+      background: #FFFBF0;
+      border: 0.5px solid #E8D98A;
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin: 1.75rem 0;
+    }
+    .scenario-box .scenario-title {
+      font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; color: #8A6D00; margin-bottom: 10px;
+    }
+    .scenario-box p { color: #4a3d00; margin-bottom: 0; font-size: 15px; }
+    .scenario-box p:not(:last-child) { margin-bottom: 8px; }
+
+    .rule-list { list-style: none; padding: 0; }
+    .rule-list li {
+      display: flex; gap: 10px; align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 0.5px solid rgba(0,0,0,0.07);
+    }
+    .rule-list li:last-child { border-bottom: none; }
+    .rule-num {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: #E6F1FB; color: #185FA5;
+      font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+
+    .cta-box {
+      background: linear-gradient(135deg, #E6F1FB 0%, #d4e8f7 100%);
+      border: 0.5px solid #b8d4ee;
+      border-radius: 14px;
+      padding: 24px 24px;
+      text-align: center;
+      margin: 2.5rem 0;
+    }
+    .cta-box h3 { color: #0C447C; margin: 0 0 8px; font-size: 18px; }
+    .cta-box p { color: #1a5a8a; font-size: 14px; margin-bottom: 16px; }
+    .cta-btn {
+      display: inline-block;
+      background: #185FA5; color: #fff;
+      text-decoration: none; font-weight: 600; font-size: 15px;
+      padding: 11px 28px; border-radius: 8px;
+      transition: background 0.15s;
+    }
+    .cta-btn:hover { background: #0e4a85; }
+
+    .divider {
+      border: none; border-top: 0.5px solid rgba(0,0,0,0.1);
+      margin: 2.5rem 0;
+    }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2.5rem; }
+    .tag {
+      font-size: 12px; padding: 3px 10px; border-radius: 100px;
+      background: #ededea; color: #6b6b67;
+      border: 0.5px solid rgba(0,0,0,0.1);
+    }
+
+    footer {
+      margin-top: 3.5rem;
+      padding-top: 1.5rem;
+      border-top: 0.5px solid rgba(0,0,0,0.1);
+      text-align: center;
+      font-size: 13px;
+      color: #9f9f9b;
+    }
+    footer a { color: #185FA5; text-decoration: none; margin: 0 8px; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <a class="back-link" href="/blog.html">← Back to Blog</a>
+
+  <div class="post-label">Dining Guide</div>
+  <h1>How to Split a Restaurant Bill Fairly (Without the Awkward Math)</h1>
+  <div class="meta">
+    <span>📅 June 2026</span>
+    <span>·</span>
+    <span>⏱ 5 min read</span>
+  </div>
+
+  <p class="intro">
+    You've just had a great dinner with friends. The food was good, the conversation was better. Then the check arrives — and suddenly the table goes quiet. Nobody wants to do the math. Nobody wants to be the person who asks for too much. And somebody always ends up silently subsidizing someone else's steak.
+  </p>
+
+  <p>It doesn't have to be this way. Splitting a restaurant bill fairly is actually pretty simple once you understand what you're really splitting — and what most people get wrong about it.</p>
+
+  <h2>The Problem With "Just Divide By Everyone"</h2>
+
+  <p>The most common approach to splitting a bill is also the laziest one: add everything up, divide by the number of people, done. It takes ten seconds and feels democratic. But it almost never reflects what anyone actually spent.</p>
+
+  <div class="scenario-box">
+    <div class="scenario-title">A real example</div>
+    <p>Four friends go to dinner. Maya orders a side salad and water — $14 total. Tyler orders the ribeye, two cocktails, and dessert — $78 total. The bill comes to $120 before tax and tip.</p>
+    <p>Split four ways equally: everyone pays $30. Maya just subsidized $16 of Tyler's steak. Tyler got a discount. Nobody meant for this to happen, but it did.</p>
+  </div>
+
+  <p>The divide-equally method works fine when everyone ordered roughly the same thing. But in most group dinners, that's rarely the case. Someone always skipped the appetizer. Someone had the most expensive thing on the menu. Someone didn't drink.</p>
+
+  <h2>What You're Actually Splitting</h2>
+
+  <p>Here's something most people don't realize: the number on the menu is never the number you actually pay. A restaurant bill has three layers on top of the menu price:</p>
+
+  <ul>
+    <li><strong>Sales tax</strong> — set by your state and city, usually 6–10%. In New York City, it's 8.875%. In Oregon, it's 0%. It varies wildly.</li>
+    <li><strong>Tip</strong> — typically 18–22% at a sit-down restaurant, applied on top of the pre-tax subtotal.</li>
+    <li><strong>Shared items</strong> — appetizers, bread, a bottle of wine the table split, etc.</li>
+  </ul>
+
+  <p>Most people eyeball this. They add a rough 25–30% to whatever they ordered and call it fair. But "rough" means someone is overpaying and someone is underpaying every single time.</p>
+
+  <p>The fair method applies tax and tip <em>proportionally</em> — based on what each person actually ordered — not as a flat addition on top of an equal split.</p>
+
+  <h2>The Right Way to Split a Bill</h2>
+
+  <p>Here's the actual math, step by step:</p>
+
+  <div class="highlight-box">
+    <ol>
+      <li>List what each person ordered and the menu price of each item.</li>
+      <li>Add up each person's individual subtotal.</li>
+      <li>Divide shared items (appetizers, desserts, etc.) equally among the table.</li>
+      <li>Add each person's share of the shared items to their individual subtotal.</li>
+      <li>Multiply each person's adjusted subtotal by (1 + tax rate + tip rate).</li>
+      <li>That's what each person owes.</li>
+    </ol>
+  </div>
+
+  <p>So if Maya's subtotal is $14 and her share of the shared appetizer is $4, her adjusted subtotal is $18. With 8.875% tax and 20% tip, she owes $18 × 1.28875 = <strong>$23.20</strong>. Not $30.</p>
+
+  <p>Tyler's subtotal is $78 plus his $4 share of the appetizer, so $82. He owes $82 × 1.28875 = <strong>$105.68</strong>. Not $30.</p>
+
+  <p>That's the honest split. It takes a little more effort, but it's the only method that's actually fair to everyone at the table.</p>
+
+  <h2>Handling the Tricky Parts</h2>
+
+  <h3>Shared appetizers and bottles of wine</h3>
+  <p>The cleanest approach is to divide shared items equally among everyone who had them. If only four of the six people at the table shared a bottle of wine, split that bottle four ways — not six. Be specific about who participated in what.</p>
+
+  <h3>Someone didn't drink alcohol</h3>
+  <p>This comes up constantly and causes more bill-splitting arguments than anything else. The person who had sparkling water all night shouldn't pay for anyone's cocktails. Keep drinks separate from food when you're tallying individual subtotals.</p>
+
+  <h3>The "I'll just pay for myself" person</h3>
+  <p>Every group has one. They're not being difficult — they're actually just doing what this whole article is recommending. Let them. Calculate their total using the same proportional method and they'll owe exactly what they should.</p>
+
+  <h3>Rounding and odd cents</h3>
+  <p>Don't stress about splitting $0.03 unevenly. Round everyone up to the nearest dollar. The extra change goes toward the tip, which the server appreciates.</p>
+
+  <h2>The Unspoken Rules Most People Follow</h2>
+
+  <ul class="rule-list">
+    <li>
+      <div class="rule-num">1</div>
+      <div><strong>Whoever ordered the most expensive thing offers to pay a bigger share.</strong> You don't have to, but it's a gesture that keeps friendships intact.</div>
+    </li>
+    <li>
+      <div class="rule-num">2</div>
+      <div><strong>Don't calculate to the penny in casual settings.</strong> Among close friends, proportional-ish is close enough. Save exact math for larger groups or expensive meals.</div>
+    </li>
+    <li>
+      <div class="rule-num">3</div>
+      <div><strong>Whoever has the easiest payment setup usually collects.</strong> One person puts it on their card, everyone Venmos them. Simpler than splitting the card payment five ways at the terminal.</div>
+    </li>
+    <li>
+      <div class="rule-num">4</div>
+      <div><strong>Always tip on the pre-tax subtotal.</strong> In the US, the standard is to tip 18–22% on the food and drink total before tax is applied. Some people tip on the post-tax total — that's generous but not required.</div>
+    </li>
+    <li>
+      <div class="rule-num">5</div>
+      <div><strong>If someone can't afford their share, cover them quietly.</strong> Split their difference among the rest of the group without making it a thing. You've been there too.</div>
+    </li>
+  </ul>
+
+  <h2>Solo Dining: What You Actually Owe</h2>
+
+  <p>Even if you're eating alone or just want to know your own total before the check comes, the math is the same. Take your menu subtotal, multiply by your local tax rate, add the tip percentage you want to leave, and that's your real number.</p>
+
+  <p>A $22 meal with 8.875% tax and 20% tip isn't $22. It's <strong>$28.35</strong>. Always good to know before you check your bank balance the next morning.</p>
+
+  <hr class="divider">
+
+  <div class="cta-box">
+    <h3>Skip the mental math entirely</h3>
+    <p>Our free bill splitter handles all of this automatically — individual items, shared dishes, proportional tax and tip, and a per-person Venmo breakdown. Takes about 60 seconds.</p>
+    <a class="cta-btn" href="/">Try the Bill Splitter →</a>
+  </div>
+
+  <h2>The Bottom Line</h2>
+
+  <p>Splitting a restaurant bill fairly isn't about being cheap or making things complicated. It's about making sure no one quietly pays more than they should, and no one quietly gets away with paying less.</p>
+
+  <p>The equal-split method is easy, but it's only fair when everyone ordered roughly the same thing. The moment orders diverge — one salad, one steak, one round of cocktails — proportional splitting is the only honest way to go.</p>
+
+  <p>Figure out what each person ordered. Split shared items equally. Apply tax and tip proportionally. Done. No awkward silence at the table, no resentment on the Venmo notification, no one feeling like they got taken advantage of.</p>
+
+  <p>Good food, good company, and a fair bill. That's the goal.</p>
+
+  <div class="tag-row">
+    <span class="tag">bill splitting</span>
+    <span class="tag">restaurant tips</span>
+    <span class="tag">dining with friends</span>
+    <span class="tag">tip calculator</span>
+    <span class="tag">group dinner</span>
+    <span class="tag">personal finance</span>
+  </div>
+
+  <footer>
+    <p>© 2026 Bill Splitter Calculator. All rights reserved.</p>
+    <div style="margin-top:8px">
+      <a href="/">Home</a>
+      <a href="/blog.html">Blog</a>
+      <a href="/privacy.html">Privacy Policy</a>
+      <a href="/terms.html">Terms of Service</a>
+      <a href="/contact.html">Contact Us</a>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
